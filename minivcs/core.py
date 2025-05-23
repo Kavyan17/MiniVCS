@@ -88,3 +88,23 @@ def commit_changes(message):
         json.dump({"staged": []}, f, indent=4)
 
     print(f"Committed as {commit_id}: \"{message}\"")
+
+def show_log():
+    commits_dir = os.path.join(".minivcs", "commits")
+
+    if not os.path.exists(commits_dir):
+        print("No commits found.")
+        return
+
+    commit_ids = sorted(os.listdir(commits_dir), reverse=True)
+
+    for cid in commit_ids:
+        meta_path = os.path.join(commits_dir, cid, "meta.json")
+        if os.path.exists(meta_path):
+            with open(meta_path, "r") as f:
+                data = json.load(f)
+                print(f"Commit: {data['id']}")
+                print(f"Date:   {data['timestamp']}")
+                print(f"Message:{data['message']}")
+                print(f"Files:  {', '.join(data['files'])}")
+                print("-" * 40)
