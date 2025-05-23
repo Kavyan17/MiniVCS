@@ -23,5 +23,12 @@ def commit(message):
     from minivcs.core import commit_changes
     commit_changes(message)
 
+@cli.command()
+def log():
+    """Show commit logs."""
+    from minivcs.core import show_log
+    show_log()
+
+
 if __name__ == "__main__":
     cli()
