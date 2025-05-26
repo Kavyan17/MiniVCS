@@ -108,3 +108,38 @@ def show_log():
                 print(f"Message:{data['message']}")
                 print(f"Files:  {', '.join(data['files'])}")
                 print("-" * 40)
+
+def show_status():
+    index_file = os.path.join(".minivcs", "index.json")
+
+    if not os.path.exists(index_file):
+        print("Repository not initialized.")
+        return
+
+    with open(index_file, "r") as f:
+        index = json.load(f)
+
+    staged = index.get("staged", [])
+
+    print("=== Staged Files ===")
+    if staged:
+        for f in staged:
+            print(f"  {f}")
+    else:
+        print("  (none)")
+
+    # Detect untracked files
+    tracked = set(staged)
+    all_files = set([
+        f for f in os.listdir(".")
+        if os.path.isfile(f) and not f.startswith(".")
+    ])
+
+    untracked = all_files - tracked
+
+    print("\n=== Untracked Files ===")
+    if untracked:
+        for f in untracked:
+            print(f"  {f}")
+    else:
+        print("  (none)")
