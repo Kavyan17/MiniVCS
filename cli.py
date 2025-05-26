@@ -29,6 +29,12 @@ def log():
     from minivcs.core import show_log
     show_log()
 
+@cli.command()
+def status():
+    """Show the status of the working directory."""
+    from minivcs.core import show_status
+    show_status()
+
 
 if __name__ == "__main__":
     cli()
