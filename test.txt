@@ -1,1 +1,1 @@
-Test VCS content
+Diff test

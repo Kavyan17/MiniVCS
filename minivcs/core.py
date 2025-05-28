@@ -3,6 +3,7 @@ import json
 import shutil
 import time
 import hashlib
+import difflib
 
 def init_repo():
     vcs_dir = ".minivcs"
@@ -143,3 +144,84 @@ def show_status():
             print(f"  {f}")
     else:
         print("  (none)")
+
+def remove_file(filename):
+    index_file = os.path.join(".minivcs", "index.json")
+
+    if not os.path.exists(index_file):
+        print("Repository not initialized.")
+        return
+
+    with open(index_file, "r") as f:
+        index = json.load(f)
+
+    if filename not in index["staged"]:
+        print(f"File '{filename}' is not staged.")
+        return
+
+    index["staged"].remove(filename)
+
+    with open(index_file, "w") as f:
+        json.dump(index, f, indent=4)
+
+    print(f"Removed '{filename}' from staging area.")
+
+def checkout_commit(commit_id):
+    commit_path = os.path.join(".minivcs", "commits", commit_id)
+
+    if not os.path.exists(commit_path):
+        print(f"No commit found with ID '{commit_id}'.")
+        return
+
+    for file in os.listdir(commit_path):
+        if file == "meta.json":
+            continue
+        src = os.path.join(commit_path, file)
+        dst = file
+        shutil.copy(src, dst)
+
+    print(f"Checked out files from commit {commit_id}.")
+
+def show_diff():
+    index_file = os.path.join(".minivcs", "index.json")
+    commits_dir = os.path.join(".minivcs", "commits")
+
+    if not os.path.exists(index_file) or not os.path.exists(commits_dir):
+        print("Repository not initialized.")
+        return
+
+    with open(index_file, "r") as f:
+        index = json.load(f)
+
+    staged = index.get("staged", [])
+    if not staged:
+        print("No files staged.")
+        return
+
+    commit_ids = sorted(os.listdir(commits_dir), reverse=True)
+
+    for file in staged:
+        found = False
+        for commit_id in commit_ids:
+            committed_path = os.path.join(commits_dir, commit_id, os.path.basename(file))
+            if os.path.exists(committed_path):
+                with open(committed_path, "r") as f1, open(file, "r") as f2:
+                    committed_lines = f1.readlines()
+                    current_lines = f2.readlines()
+                    diff = difflib.unified_diff(
+                        committed_lines,
+                        current_lines,
+                        fromfile=f"commit:{commit_id}",
+                        tofile="working copy"
+                    )
+                    print(f"\n--- Diff for {file} ---")
+                    diff_output = ''.join(diff)
+                    if diff_output:
+                        print(diff_output)
+                    else:
+                        print("No changes.")
+                found = True
+                break
+        if not found:
+            print(f"No previous commit found for {file}.")
+
