@@ -15,51 +15,50 @@ All commands are run via:
     python cli.py <command>
 
 ## ✅ Features and Commands
-1. 🔧 Initialize a Repository
+### 1. 🔧 Initialize a Repository
     python cli.py init
-
 Creates .minivcs/ with:
     - commits/ folder to store snapshots
     - index.json to manage staging area
 
-2. ➕ Stage Files
+### 2. ➕ Stage Files
     python cli.py add <filename>
 Adds a file to the staging area (tracked in index.json).
 
-3. ✅ Commit Changes
+### 3. ✅ Commit Changes
     python cli.py commit "<message>"
 Creates a commit:
     - Copies staged files to .minivcs/commits/<commit-id>/
     - Stores metadata like ID, timestamp, message, and file list
 
-4. 📋 Show Commit History
+### 4. 📋 Show Commit History
     python cli.py log
 Displays all commits in reverse chronological order.
 
-5. 🔍 Check Repository Status
+### 5. 🔍 Check Repository Status
     python cli.py status
 Shows:
     - Staged Files (ready to commit)
     - Untracked Files (exist but not staged)
 
-6. 🗑️ Remove from Staging
+### 6. 🗑️ Remove from Staging
     python cli.py remove <filename>
 Unstages a file (removes from index.json).
 
-7. 📦 Checkout a Commit
+### 7. 📦 Checkout a Commit
     python cli.py checkout <commit-id>
     Restores all committed files from a specific commit to your working directory.
 
 To get a commit ID:
     python cli.py log
 
-8. 🔍 Show File Differences
+### 8. 🔍 Show File Differences
     python cli.py diff
 Shows the line-by-line difference between:
     - The staged file in your working directory
     - Its last committed version
 
-📁 Project Structure
+### 📁 Project Structure
     MiniVCS/
     ├── cli.py          # CLI commands
     ├── minivcs/
@@ -70,7 +69,7 @@ Shows the line-by-line difference between:
     │   └── index.json
     └── README.md
 
-🔮 Coming Soon (Ideas)
+### 🔮 Coming Soon (Ideas)
     - branch, merge, tag
     - file-level diff views
     - conflict resolution
