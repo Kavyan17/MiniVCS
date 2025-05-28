@@ -35,6 +35,25 @@ def status():
     from minivcs.core import show_status
     show_status()
 
+@cli.command()
+@click.argument("filename")
+def remove(filename):
+    """Remove a file from the staging area."""
+    from minivcs.core import remove_file
+    remove_file(filename)
+
+@cli.command()
+@click.argument("commit_id")
+def checkout(commit_id):
+    """Restore files from a specific commit."""
+    from minivcs.core import checkout_commit
+    checkout_commit(commit_id)
+
+@cli.command()
+def diff():
+    """Show differences between last commit and current staged files."""
+    from minivcs.core import show_diff
+    show_diff()
 
 if __name__ == "__main__":
     cli()
